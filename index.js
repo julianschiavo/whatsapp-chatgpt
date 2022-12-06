@@ -51,7 +51,7 @@ app.post('/receive', async (request, response) => {
   const body = request.body.Body
   if (body === "RESET") {
     threadingMap.delete(from)
-    send("Thread has been reset! Send another message to start fresh—so she doesn't remember your affairs.", from)
+    send("Thread has been reset! Send another message to start fresh—so she doesn't remember your affairs.", to, from)
     return
   }
 
