@@ -113,10 +113,15 @@ async function send(answer, to) {
     return
   }
 
+  from = process.env.TWILIO_NUMBER
+  if (to.startsWith("whatsapp:")) {
+    from = "whatsapp:" + from
+  }
+
   var message = await twilio.messages
     .create({
       body: answer,
-      from: process.env.TWILIO_NUMBER,
+      from: from,
       to: to
     })
   // console.log("Sent Message: " + message.sid)
