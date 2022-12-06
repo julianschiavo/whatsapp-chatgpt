@@ -114,6 +114,7 @@ async function send(answer, from, to) {
     return
   }
 
+  console.log("from: " + from, "to: " + to)
   var message = await twilio.messages
     .create({
       body: answer,
