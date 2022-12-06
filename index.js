@@ -33,7 +33,8 @@ app.post('/receive', async (request, response) => {
   console.log("Received Request:\t\t" + request.body.Body)
 
   const from = request.body.From
-  if (from !== 'whatsapp:+85295006603' && from !== 'whatsapp:+16102478425' && from !== 'whatsapp:+85293099921') {
+  // if NOT from any of process.env.ALLOWED_NUMBERS, formatted as Number,Number,Number
+  if (process.env.ALLOWED_NUMBERS.split(",").indexOf(from) === -1) {
     console.log("Received Request from Unauthorised Number")
     response.status(401).send("Unauthorized")
     return
