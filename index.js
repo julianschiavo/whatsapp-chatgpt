@@ -58,6 +58,7 @@ app.post('/receive', async (request, response) => {
     const number = body.split(" ")[1]
     if (process.env.ALLOWED_NUMBERS.split(",").indexOf(number) === -1) {
       process.env.ALLOWED_NUMBERS += "," + number
+      process.env.ALLOWED_NUMBERS += ",whatsapp:" + number
       reply("[SYSTEM] Approved " + number, response)
     } else {
       reply("[SYSTEM] " + number + " is already approved", response)
