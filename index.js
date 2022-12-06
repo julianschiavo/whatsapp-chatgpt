@@ -46,14 +46,26 @@ app.post('/receive', async (request, response) => {
     return
   }
 
-  reply("One moment...", response)
-
   const body = request.body.Body
   if (body === "RESET") {
     threadingMap.delete(from)
-    send("Thread has been reset! Send another message to start fresh—so she doesn't remember your affairs.", to, from)
+    reply("[SYSTEM] Thread has been reset! Send another message to start fresh—so she doesn't remember your affairs.", response)
     return
   }
+
+  // if body contains "APPROVE <number>" and from is "whatsapp:+85295006603", add it to .env allowed numbers
+  if (body.startsWith("APPROVE ") && from == 'whatsapp:+85295006603') {
+    const number = body.split(" ")[1]
+    if (process.env.ALLOWED_NUMBERS.split(",").indexOf(number) === -1) {
+      process.env.ALLOWED_NUMBERS += "," + number
+      reply("[SYSTEM] Approved " + number, response)
+    } else {
+      reply("[SYSTEM] " + number + " is already approved", response)
+    }
+    return
+  }
+
+  reply("One moment...", response)
 
   const answer = await generateReply(body, from)
   send(answer, to, from)
