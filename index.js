@@ -55,6 +55,7 @@ app.post('/receive', async (request, response) => {
     return
   }
 
+  console.log("from: " + from, "to: " + to)
   const answer = await generateReply(body, from)
   send(answer, to, from)
 })
