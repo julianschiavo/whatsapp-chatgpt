@@ -55,7 +55,6 @@ app.post('/receive', async (request, response) => {
     return
   }
 
-  console.log("from: " + from, "to: " + to)
   const answer = await generateReply(body, from)
   send(answer, to, from)
 })
@@ -109,13 +108,12 @@ async function send(answer, from, to) {
   if (answer.length > 600) {
     const messages = answer.match(/.{1,500}(?:\s|$)/gs)
     for (const message of messages) {
-      await send(message, to)
+      await send(message, from, to)
       await new Promise(resolve => setTimeout(resolve, 3000))
     }
     return
   }
 
-  console.log("from: " + from, "to: " + to)
   var message = await twilio.messages
     .create({
       body: answer,
