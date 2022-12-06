@@ -32,6 +32,7 @@ app.post('/receive', async (request, response) => {
   console.log("\n\n" + request.body.From)
   console.log("Received Request:\t\t" + request.body.Body)
 
+  const to = request.body.To
   const from = request.body.From
   // if NOT from any of process.env.ALLOWED_NUMBERS, formatted as Number,Number,Number
   if (process.env.ALLOWED_NUMBERS.split(",").indexOf(from) === -1) {
@@ -55,7 +56,7 @@ app.post('/receive', async (request, response) => {
   }
 
   const answer = await generateReply(body, from)
-  send(answer, from)
+  send(answer, to, from)
 })
 
 async function generateReply(body, from) {
@@ -100,7 +101,7 @@ async function reply(answer, response) {
     .send(twiml.toString())
 }
 
-async function send(answer, to) {
+async function send(answer, from, to) {
   // console.log("Sending Message")
 
   // if answer length is greater than 1600, split into multiple messages
@@ -111,11 +112,6 @@ async function send(answer, to) {
       await new Promise(resolve => setTimeout(resolve, 3000))
     }
     return
-  }
-
-  from = process.env.TWILIO_NUMBER
-  if (to.startsWith("whatsapp:")) {
-    from = "whatsapp:" + from
   }
 
   var message = await twilio.messages
