@@ -11,6 +11,8 @@ import { ChatGPTAPI } from 'chatgpt'
 import Twilio from 'twilio'
 const { MessagingResponse } = Twilio.twiml
 
+import fs from 'fs'
+
 app.use(bodyParser.json({}))
 app.use(bodyParser.urlencoded({
   extended: true
@@ -59,6 +61,9 @@ app.post('/receive', async (request, response) => {
     if (process.env.ALLOWED_NUMBERS.split(",").indexOf(number) === -1) {
       process.env.ALLOWED_NUMBERS += "," + number
       process.env.ALLOWED_NUMBERS += ",whatsapp:" + number
+
+      fs.writeFileSync('.env', fs.readFileSync('.env').toString().replace(/ALLOWED_NUMBERS=.*/g, "ALLOWED_NUMBERS=" + process.env.ALLOWED_NUMBERS))
+
       reply("[SYSTEM] Approved " + number, response)
     } else {
       reply("[SYSTEM] " + number + " is already approved", response)
